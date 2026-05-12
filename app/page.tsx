@@ -193,36 +193,6 @@ export default function Home() {
           ticker.addEventListener("mouseleave", () => animation.play());
         }
       }
-
-      // 5. Magnetic Buttons (Desktop Only)
-      if (window.innerWidth >= 1024) {
-        const magneticContainers = document.querySelectorAll(".magnetic-container");
-        magneticContainers.forEach((container) => {
-          const btn = container.querySelector(".magnetic-btn");
-          if (!btn) return;
-
-          container.addEventListener("mousemove", (e: any) => {
-            const rect = container.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            gsap.to(btn, {
-              x: x * 0.4,
-              y: y * 0.4,
-              duration: 0.4,
-              ease: "power2.out",
-            });
-          });
-
-          container.addEventListener("mouseleave", () => {
-            gsap.to(btn, {
-              x: 0,
-              y: 0,
-              duration: 0.6,
-              ease: "elastic.out(1, 0.3)",
-            });
-          });
-        });
-      }
     }, mainRef);
 
     return () => ctx.revert();
@@ -261,13 +231,9 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-4 md:gap-8">
             <UserMenu />
-            <div className="magnetic-container p-1">
-              <BookingButton
-                className="magnetic-btn border border-[#d4af37] bg-[#d4af37] px-4 py-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#241a00] transition-shadow hover:shadow-[0_0_24px_rgba(212,175,55,0.35)] md:px-6 inline-block"
-              >
-                Book
-              </BookingButton>
-            </div>
+            <BookingButton
+              className="border border-[#d4af37] bg-[#d4af37] px-4 py-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#241a00] transition-shadow hover:shadow-[0_0_24px_rgba(212,175,55,0.35)] md:px-6 inline-block"
+            />
           </div>
         </nav>
 
@@ -303,21 +269,17 @@ export default function Home() {
               </p>
             </div>
             <div className="hero-reveal mt-10 md:mt-12 flex flex-col justify-center items-center gap-4 sm:flex-row">
-              <div className="magnetic-container sm:p-2 lg:p-4">
-                <BookingButton
-                  className="magnetic-btn w-full sm:w-auto border border-[#f2ca50] bg-[#f2ca50] px-8 md:px-10 py-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#241a00] transition-shadow hover:shadow-[0_0_24px_rgba(242,202,80,0.35)] inline-block"
-                >
-                  Book an Appointment
-                </BookingButton>
-              </div>
-              <div className="magnetic-container sm:p-2 lg:p-4">
-                <a
-                  href="#services"
-                  className="magnetic-btn w-full sm:w-auto border border-[#eae1d4] px-8 md:px-10 py-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#eae1d4] transition-colors hover:bg-[#eae1d4] hover:text-[#16130b] inline-block"
-                >
-                  Explore Services
-                </a>
-              </div>
+              <BookingButton
+                className="w-full sm:w-auto border border-[#f2ca50] bg-[#f2ca50] px-8 md:px-10 py-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#241a00] transition-shadow hover:shadow-[0_0_24px_rgba(242,202,80,0.35)] inline-block"
+              >
+                Book Now
+              </BookingButton>
+              <a
+                href="#services"
+                className="w-full sm:w-auto border border-[#eae1d4] px-8 md:px-10 py-4 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#eae1d4] transition-colors hover:bg-[#eae1d4] hover:text-[#16130b] inline-block"
+              >
+                Explore Services
+              </a>
             </div>
           </div>
         </section>
@@ -459,13 +421,12 @@ export default function Home() {
             ))}
           </div>
           <div className="reveal-section mt-10 md:mt-12 text-center">
-            <div className="magnetic-container inline-block">
-              <a
-                href="https://maps.app.goo.gl/3YZMDG9hHQLjVoaL9"
-                target="_blank"
-                rel="noreferrer"
-                className="magnetic-btn inline-flex items-center gap-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37] transition-colors hover:text-[#f2ca50]"
-              >
+            <a
+              href="https://maps.app.goo.gl/3YZMDG9hHQLjVoaL9"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-[#d4af37] transition-colors hover:text-[#f2ca50]"
+            >
                 <span>View All Google Reviews</span>
                 <svg
                   className="h-4 w-4"
@@ -482,8 +443,7 @@ export default function Home() {
                 </svg>
               </a>
             </div>
-          </div>
-        </section>
+          </section>
 
         <section id="gallery" className="bg-black py-20 md:py-24">
           <div className="reveal-section mx-auto mb-10 md:mb-14 max-w-7xl px-5 text-center md:px-20">
@@ -537,13 +497,11 @@ export default function Home() {
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl leading-tight text-[#241a00]">
             Experience the Master&apos;s Touch
           </h2>
-          <div className="magnetic-container mt-8">
-            <BookingButton
-              className="magnetic-btn bg-black px-10 md:px-12 py-5 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#f2ca50] transition-transform hover:scale-105 inline-block"
-            >
-              Book Your Experience
-            </BookingButton>
-          </div>
+          <BookingButton
+            className="mt-8 bg-black px-10 md:px-12 py-5 text-[10px] md:text-xs font-bold uppercase tracking-[0.15em] text-[#f2ca50] transition-transform hover:scale-105 inline-block"
+          >
+            Book Your Experience
+          </BookingButton>
         </section>
 
         <footer

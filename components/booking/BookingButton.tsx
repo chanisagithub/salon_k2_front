@@ -4,6 +4,8 @@ import { useSession, signIn } from "next-auth/react";
 import { useState } from "react";
 import BookingModal from "./BookingModal";
 
+import { cn } from "@/lib/utils";
+
 interface BookingButtonProps {
   className?: string;
   children?: React.ReactNode;
@@ -24,8 +26,11 @@ export default function BookingButton({ className, children }: BookingButtonProp
 
   return (
     <>
-      <button onClick={handleBooking} className={className}>
-        {children || "Book Now"}
+      <button 
+        onClick={handleBooking} 
+        className={cn("cursor-pointer", className)}
+      >
+        {children || (session ? "Book" : "Sign In")}
       </button>
 
       {isOpen && <BookingModal onClose={() => setIsOpen(false)} />}
