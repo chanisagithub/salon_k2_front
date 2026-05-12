@@ -1,0 +1,138 @@
+/* 2KCUT Luxury Dark Theme for Keycloak - HIGH PRIORITY OVERRIDES */
+
+/* Base Reset */
+body {
+    background-color: #050505 !important;
+    background-image: none !important;
+    color: #eae1d4 !important;
+    font-family: 'Hanken Grotesk', -apple-system, sans-serif !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100vh !important;
+    margin: 0 !important;
+}
+
+/* Hide PatternFly/Keycloak Headers */
+#kc-header, .login-pf-page-header, .pf-c-brand {
+    display: none !important;
+}
+
+/* The Main Card */
+.card-pf, .pf-c-card {
+    background-color: #0a0a0a !important;
+    border: 1px solid #d4af37 !important;
+    box-shadow: 0 0 60px rgba(212, 175, 55, 0.2) !important;
+    border-radius: 0 !important;
+    padding: 40px !important;
+    max-width: 450px !important;
+    width: 100% !important;
+}
+
+/* Title Styling */
+#kc-page-title, .pf-c-title, .kc-login-testing {
+    color: #f2ca50 !important;
+    font-family: 'Libre Caslon Text', serif !important;
+    font-size: 28px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.2em !important;
+    text-align: center !important;
+    margin-bottom: 30px !important;
+    border: none !important;
+}
+
+/* Form Labels */
+label, .pf-c-form__label-text {
+    color: #f2ca50 !important;
+    text-transform: uppercase !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.2em !important;
+    margin-bottom: 10px !important;
+}
+
+/* Input Fields - Kill the Blue */
+input.form-control, .pf-c-form-control {
+    background-color: #000 !important;
+    border: 1px solid #2a2a2a !important;
+    color: #eae1d4 !important;
+    border-radius: 0 !important;
+    padding: 14px !important;
+    height: auto !important;
+    box-shadow: none !important;
+}
+
+input.form-control:focus, .pf-c-form-control:focus {
+    border-color: #f2ca50 !important;
+    outline: none !important;
+}
+
+/* BUTTONS - DEFEAT THE BLUE */
+.btn-primary, .pf-c-button.pf-m-primary, #kc-login {
+    background-color: #d4af37 !important;
+    background-image: none !important;
+    border: none !important;
+    color: #000 !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.2em !important;
+    border-radius: 0 !important;
+    padding: 16px !important;
+    width: 100% !important;
+    margin-top: 25px !important;
+    cursor: pointer !important;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+}
+
+.btn-primary:hover, .pf-c-button.pf-m-primary:hover, #kc-login:hover {
+    background-color: #f2ca50 !important;
+    transform: translateY(-3px) !important;
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4) !important;
+}
+
+.btn-primary:active, .pf-c-button.pf-m-primary:active {
+    transform: translateY(-1px) !important;
+}
+
+/* Links and Registration */
+#kc-registration, .pf-c-login__main-footer-band {
+    margin-top: 30px !important;
+    text-align: center !important;
+    color: #d0c5af !important;
+    font-size: 12px !important;
+    border: none !important;
+}
+
+#kc-registration a, .pf-c-button.pf-m-link {
+    color: #f2ca50 !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.1em !important;
+}
+
+#kc-registration a:hover, .pf-c-button.pf-m-link:hover {
+    color: #eae1d4 !important;
+    text-decoration: underline !important;
+}
+
+/* Error/Info Messages */
+.alert, .pf-c-alert {
+    border-radius: 0 !important;
+    border: 1px solid transparent !important;
+}
+
+.alert-error, .pf-m-danger {
+    background-color: #2a0000 !important;
+    border-color: #ff4d4d !important;
+    color: #ffcccc !important;
+}
+
+/* Fix for newer Keycloak versions that use Grid layout */
+.pf-c-login__main {
+    background-color: transparent !important;
+}
+
+.pf-c-login {
+    background-color: #050505 !important;
+}
