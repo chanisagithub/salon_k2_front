@@ -247,7 +247,7 @@ export default function Home() {
             alt=""
             fill
             sizes="100vw"
-            className="object-cover opacity-55 saturate-50"
+            className="object-cover opacity-55 saturate-100 md:saturate-50"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/45 to-black/20" />
@@ -293,7 +293,7 @@ export default function Home() {
           <div ref={tickerRef} className="flex whitespace-nowrap">
             <div className="ticker-content flex items-center gap-12 md:gap-20 px-10">
               {brands.map((brand, i) => (
-                <div key={i} className="relative h-8 w-24 md:h-12 md:w-32 flex-shrink-0 grayscale opacity-40 transition-all hover:grayscale-0 hover:opacity-100">
+                <div key={i} className="relative h-8 w-24 md:h-12 md:w-32 flex-shrink-0 opacity-90 md:grayscale md:opacity-40 transition-all md:hover:grayscale-0 md:hover:opacity-100">
                   <Image
                     src={brand}
                     alt="Partner Brand"
@@ -327,7 +327,7 @@ export default function Home() {
                     alt={service.alt}
                     fill
                     sizes="(min-width: 768px) 33vw, 100vw"
-                    className="object-cover grayscale transition-transform duration-700 hover:scale-110 hover:grayscale-0"
+                    className="object-cover md:grayscale transition-transform duration-700 md:hover:scale-110 md:hover:grayscale-0"
                   />
                 </div>
                 <div className="p-6 md:p-8 text-center">
@@ -359,7 +359,7 @@ export default function Home() {
                   alt="Master Barber Kamal at work"
                   fill
                   sizes="(min-width: 768px) 50vw, 100vw"
-                  className="object-cover grayscale transition duration-700 hover:grayscale-0"
+                  className="object-cover md:grayscale transition duration-700 md:hover:grayscale-0"
                 />
               </div>
             </div>
@@ -465,7 +465,7 @@ export default function Home() {
                   alt={image.alt}
                   fill
                   sizes="(min-width: 768px) 25vw, 50vw"
-                  className="object-cover grayscale transition duration-500 hover:scale-110 hover:grayscale-0"
+                  className="object-cover md:grayscale transition duration-500 md:hover:scale-110 md:hover:grayscale-0"
                 />
               </div>
             ))}
@@ -636,4 +636,3 @@ export default function Home() {
     </div>
   );
 }
-
