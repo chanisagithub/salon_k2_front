@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { clientFetch } from "@/lib/api-client";
 import Image from "next/image";
@@ -14,6 +14,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { sessionHasRole } from "@/lib/session-claims";
 
 interface Appointment {
   id: string;
@@ -41,18 +42,9 @@ export default function AdminDashboard() {
     message: string;
   } | null>(null);
 
-  const isAdmin = (session as any)?.roles?.includes("ADMIN");
+  const isAdmin = sessionHasRole(session, "ADMIN");
 
-  useEffect(() => {
-    if (authStatus === "authenticated" && isAdmin) {
-      fetchAppointments();
-    } else if (authStatus === "unauthenticated" || (authStatus === "authenticated" && !isAdmin)) {
-      setLoading(false);
-    }
-  }, [authStatus, date, query, status, page, isAdmin]);
-
-  const fetchAppointments = async () => {
-    setLoading(true);
+  const fetchAppointments = useCallback(async () => {
     try {
       const params = new URLSearchParams();
       if (date) params.append("date", date);
@@ -73,7 +65,14 @@ export default function AdminDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [date, query, status, page]);
+
+  useEffect(() => {
+    if (authStatus === "authenticated" && isAdmin) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchAppointments();
+    }
+  }, [authStatus, isAdmin, fetchAppointments]);
 
   const updateStatus = async (id: string, newStatus: string) => {
     try {
@@ -85,7 +84,7 @@ export default function AdminDashboard() {
           prev.map((app) => (app.id === id ? { ...app, status: newStatus } : app))
         );
       }
-    } catch (err) {
+    } catch {
       alert("Failed to update status");
     }
   };
@@ -137,6 +136,7 @@ export default function AdminDashboard() {
                   selected={date ? new Date(date) : undefined}
                   onSelect={(d) => {
                     if (d) {
+                      setLoading(true);
                       const formatted = format(d, "yyyy-MM-dd");
                       setDate(formatted);
                       setPage(0);
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
                   }}
                 />
                 <button 
-                  onClick={() => { setDate(undefined); setPage(0); }}
+                  onClick={() => { setLoading(true); setDate(undefined); setPage(0); }}
                   className="border-t border-[#d4af37]/20 p-3 text-[10px] font-bold uppercase tracking-widest text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-colors"
                 >
                   Clear Date
@@ -166,7 +166,7 @@ export default function AdminDashboard() {
                 type="text"
                 placeholder="Customer, Barber or Service..."
                 value={query}
-                onChange={(e) => { setQuery(e.target.value); setPage(0); }}
+                onChange={(e) => { setLoading(true); setQuery(e.target.value); setPage(0); }}
                 className="w-full bg-[#0a0a0a] border border-[#2a2a2a] p-3 text-sm text-[#eae1d4] outline-none focus:border-[#d4af37] transition-colors"
               />
             </div>
@@ -174,7 +174,7 @@ export default function AdminDashboard() {
               <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-[#d4af37]/60">Status</label>
               <select 
                 value={status}
-                onChange={(e) => { setStatus(e.target.value); setPage(0); }}
+                onChange={(e) => { setLoading(true); setStatus(e.target.value); setPage(0); }}
                 className="w-full bg-[#0a0a0a] border border-[#2a2a2a] p-3 text-sm text-[#eae1d4] outline-none focus:border-[#d4af37] transition-colors appearance-none cursor-pointer"
               >
                 <option value="">All Statuses</option>
@@ -188,7 +188,7 @@ export default function AdminDashboard() {
           
           {(query || status || date) && (
             <button 
-              onClick={() => { setQuery(""); setStatus(""); setDate(undefined); setPage(0); }}
+              onClick={() => { setLoading(true); setQuery(""); setStatus(""); setDate(undefined); setPage(0); }}
               className="text-[10px] font-bold uppercase tracking-widest text-[#d4af37] hover:text-[#f2ca50] underline underline-offset-4"
             >
               Reset All Filters
@@ -205,7 +205,7 @@ export default function AdminDashboard() {
             <div className="border border-[#2a2a2a] bg-[#0a0a0a] p-20 text-center">
               <p className="text-xl text-[#d0c5af]">No rituals found matching your criteria.</p>
               <button 
-                onClick={() => { setQuery(""); setStatus(""); setDate(undefined); setPage(0); }}
+                onClick={() => { setLoading(true); setQuery(""); setStatus(""); setDate(undefined); setPage(0); }}
                 className="mt-6 border border-[#d4af37]/30 px-6 py-2 text-[10px] font-bold uppercase tracking-widest text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all"
               >
                 Clear Search
@@ -309,14 +309,14 @@ export default function AdminDashboard() {
                   <div className="flex gap-2">
                     <button 
                       disabled={page === 0}
-                      onClick={() => setPage(p => p - 1)}
+                      onClick={() => { setLoading(true); setPage(p => p - 1); }}
                       className="border border-[#2a2a2a] bg-[#0a0a0a] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#eae1d4] disabled:opacity-30 disabled:cursor-not-allowed hover:border-[#d4af37] transition-colors"
                     >
                       Previous
                     </button>
                     <button 
                       disabled={page >= totalPages - 1}
-                      onClick={() => setPage(p => p + 1)}
+                      onClick={() => { setLoading(true); setPage(p => p + 1); }}
                       className="border border-[#2a2a2a] bg-[#0a0a0a] px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-[#eae1d4] disabled:opacity-30 disabled:cursor-not-allowed hover:border-[#d4af37] transition-colors"
                     >
                       Next

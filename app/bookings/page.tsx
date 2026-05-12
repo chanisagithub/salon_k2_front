@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { clientFetch } from "@/lib/api-client";
 import Image from "next/image";
@@ -18,20 +18,11 @@ interface Appointment {
 }
 
 export default function BookingsPage() {
-  const { data: session, status } = useSession();
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { status } = useSession();
+  const [appointments, setAppointments] = useState<Appointment[] | null>(null);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetchAppointments();
-    } else if (status === "unauthenticated") {
-      setLoading(false);
-    }
-  }, [status]);
-
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     try {
       const response = await clientFetch("/booking/my-appointments");
       if (response.ok) {
@@ -40,12 +31,17 @@ export default function BookingsPage() {
       } else {
         setError("Failed to load your rituals.");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred.");
-    } finally {
-      setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchAppointments();
+    }
+  }, [status, fetchAppointments]);
 
   const handleCancel = async (id: string) => {
     if (!confirm("Are you sure you want to cancel this grooming ritual?")) return;
@@ -56,11 +52,10 @@ export default function BookingsPage() {
       });
 
       if (response.ok) {
-        setAppointments((prev) =>
-          prev.map((app) =>
-            app.id === id ? { ...app, status: "CANCELLED" } : app
-          )
-        );
+        setAppointments((prev) => {
+          if (!prev) return prev;
+          return prev.map((app) => (app.id === id ? { ...app, status: "CANCELLED" } : app));
+        });
         gsap.to(`#app-${id}`, {
           opacity: 0.5,
           scale: 0.98,
@@ -70,12 +65,12 @@ export default function BookingsPage() {
         const data = await response.json();
         alert(data.message || "Could not cancel appointment.");
       }
-    } catch (err) {
+    } catch {
       alert("An unexpected error occurred.");
     }
   };
 
-  if (status === "loading" || loading) {
+  if (status === "loading" || (status === "authenticated" && appointments === null)) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#050505]">
         <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-[#d4af37]"></div>
@@ -124,9 +119,10 @@ export default function BookingsPage() {
         <div className="mb-12">
           <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#f2ca50]">Scheduled Sessions</p>
           <h2 className="mt-4 font-serif text-4xl md:text-5xl">Your Grooming Timeline</h2>
+          {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
         </div>
 
-        {appointments.length === 0 ? (
+        {appointments?.length === 0 ? (
           <div className="border border-[#2a2a2a] bg-[#0a0a0a] p-12 text-center">
             <p className="text-lg text-[#d0c5af]">No rituals scheduled yet.</p>
             <Link
@@ -138,7 +134,7 @@ export default function BookingsPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {appointments.map((app) => (
+            {appointments?.map((app) => (
               <div
                 key={app.id}
                 id={`app-${app.id}`}

@@ -82,7 +82,7 @@ function BookingFlowOrchestrator() {
         const data = await response.json();
         setError(data.message || "Booking failed. Please check availability.");
       }
-    } catch (err) {
+    } catch {
       setError("An unexpected error occurred.");
     } finally {
       setLoading(false);

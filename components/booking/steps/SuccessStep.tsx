@@ -1,10 +1,6 @@
 "use client";
 
-import { useBooking } from "../BookingContext";
-
 export default function SuccessStep() {
-  const { state } = useBooking();
-
   return (
     <div className="flex-1 flex flex-col items-center justify-center text-center py-12">
       <div className="flex h-20 w-20 items-center justify-center rounded-full border border-primary text-primary mb-8">

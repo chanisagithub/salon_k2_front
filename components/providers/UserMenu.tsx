@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { sessionHasRole } from "@/lib/session-claims";
 
 export default function UserMenu() {
   const { data: session } = useSession();
@@ -26,7 +27,7 @@ export default function UserMenu() {
         .toUpperCase()
     : "U";
 
-  const isAdmin = (session as any)?.roles?.includes("ADMIN");
+  const isAdmin = sessionHasRole(session, "ADMIN");
 
   return (
     <DropdownMenu>
@@ -49,10 +50,12 @@ export default function UserMenu() {
       <DropdownMenuContent align="end" className="w-56 mt-2">
         <DropdownMenuLabel>Account Rituals</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         <Link href="/bookings">
           <DropdownMenuItem>
-            <span className="material-symbols-outlined mr-3 text-sm">calendar_today</span>
+            <span className="material-symbols-outlined mr-3 text-sm">
+              calendar_today
+            </span>
             My Rituals
           </DropdownMenuItem>
         </Link>
@@ -60,15 +63,17 @@ export default function UserMenu() {
         {isAdmin && (
           <Link href="/admin">
             <DropdownMenuItem>
-              <span className="material-symbols-outlined mr-3 text-sm">admin_panel_settings</span>
+              <span className="material-symbols-outlined mr-3 text-sm">
+                admin_panel_settings
+              </span>
               Master Dashboard
             </DropdownMenuItem>
           </Link>
         )}
 
         <DropdownMenuSeparator />
-        
-        <DropdownMenuItem 
+
+        <DropdownMenuItem
           onClick={() => signOut({ callbackUrl: "/" })}
           className="text-red-400 focus:text-red-400"
         >

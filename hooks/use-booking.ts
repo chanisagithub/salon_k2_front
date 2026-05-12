@@ -58,23 +58,25 @@ export function useBarbers() {
 
 export function useSlots(barberId?: string, serviceId?: string, date?: string) {
   const [slots, setSlots] = useState<Slot[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [lastLoadedKey, setLastLoadedKey] = useState<string | null>(null);
+  const requestKey = barberId && serviceId && date ? `${barberId}:${serviceId}:${date}` : null;
 
   useEffect(() => {
-    if (!barberId || !serviceId || !date) {
-      setSlots([]);
+    if (!requestKey || !barberId || !serviceId || !date) {
       return;
     }
 
-    setLoading(true);
     clientFetch(`/booking/slots?barberId=${barberId}&serviceId=${serviceId}&date=${date}`)
       .then((res) => res.json())
       .then((data) => {
         setSlots(data);
-        setLoading(false);
+        setLastLoadedKey(requestKey);
       })
-      .catch(() => setLoading(false));
-  }, [barberId, serviceId, date]);
+      .catch(() => setLastLoadedKey(requestKey));
+  }, [requestKey, barberId, serviceId, date]);
 
-  return { slots, loading };
+  return {
+    slots: requestKey && lastLoadedKey === requestKey ? slots : [],
+    loading: requestKey ? lastLoadedKey !== requestKey : false,
+  };
 }

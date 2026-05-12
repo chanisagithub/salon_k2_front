@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
 
 export default function BookingModal({ onClose }: { onClose: () => void }) {
   const backdropRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+
+  const closeWithAnim = useCallback(() => {
+    gsap.to(modalRef.current, { opacity: 0, scale: 0.95, y: 20, duration: 0.3 });
+    gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, onComplete: onClose });
+  }, [onClose]);
 
   useEffect(() => {
-    setMounted(true);
     // Entrance animation
     gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4 });
     gsap.fromTo(modalRef.current, 
@@ -34,14 +37,9 @@ export default function BookingModal({ onClose }: { onClose: () => void }) {
       window.removeEventListener('message', handleMessage);
       document.body.style.overflow = originalStyle;
     };
-  }, []);
+  }, [closeWithAnim]);
 
-  const closeWithAnim = () => {
-    gsap.to(modalRef.current, { opacity: 0, scale: 0.95, y: 20, duration: 0.3 });
-    gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, onComplete: onClose });
-  };
-
-  if (!mounted) return null;
+  if (typeof document === "undefined") return null;
 
   const modalContent = (
     <div className="fixed inset-0 z-[999999] flex items-center justify-center pointer-events-none">
