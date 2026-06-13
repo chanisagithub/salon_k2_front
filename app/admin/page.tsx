@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { sessionHasRole } from "@/lib/session-claims";
+import AdminTabs from "@/components/admin/AdminTabs";
 
 interface Appointment {
   id: string;
@@ -157,6 +158,7 @@ export default function AdminDashboard() {
       </nav>
 
       <div className="mx-auto max-w-7xl px-5">
+        <AdminTabs />
         {/* Filters Bar */}
         <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="flex flex-1 flex-col gap-4 md:flex-row md:items-end">
